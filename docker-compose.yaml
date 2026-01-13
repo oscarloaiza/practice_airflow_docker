@@ -1,0 +1,43 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:13
+    environment:
+      - POSTGRES_USER=airflow
+      - POSTGRES_PASSWORD=airflow
+      - POSTGRES_DB=airflow
+    ports:
+      - "5432:5432"
+
+  airflow-webserver:
+    image: apache/airflow:2.7.1-python3.9
+    command: webserver
+    depends_on:
+      - postgres
+    environment:
+      - LOAD_EX=n
+      - EXECUTOR=LocalExecutor
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
+    logging:
+      options:
+        max-size: "10mb"
+        max-file: "3"
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./datasets:/opt/airflow/datasets
+    ports:
+      - "8080:8080"
+
+  airflow-scheduler:
+    image: apache/airflow:2.7.1-python3.9
+    command: scheduler
+    depends_on:
+      - postgres
+    environment:
+      - LOAD_EX=n
+      - EXECUTOR=LocalExecutor
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./datasets:/opt/airflow/datasets
+    user: "${AIRFLOW_UID:-5000}:0"

@@ -1,0 +1,16 @@
+# Airflow local folders
+logs/
+plugins/
+config/
+
+# Docker
+.env
+
+# Python
+__pycache__/
+*.pyc
+venv/
+.venv
+
+# OS
+.DS_Store

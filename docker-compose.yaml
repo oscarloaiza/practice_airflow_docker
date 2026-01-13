@@ -18,6 +18,7 @@ services:
       - LOAD_EX=n
       - EXECUTOR=LocalExecutor
       - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
+      - _PIP_ADDITIONAL_DEPENDENCIES: "great_expectations pandas"
     logging:
       options:
         max-size: "10mb"
